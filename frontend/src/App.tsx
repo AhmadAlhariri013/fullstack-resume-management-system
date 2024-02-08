@@ -1,0 +1,47 @@
+import { useContext, lazy, Suspense } from "react";
+import Navbar from "./components/navbar/NavbarComponent";
+import { ThemeContext } from "./context/ThemeContext";
+import { Routes, Route } from "react-router-dom";
+import {CustomLinearProgress} from "./components/custom-linear-progress/CustomLinearProgressComponent";
+
+// Imports with Lazy loading
+const Home = lazy(() => import("./pages/home/HomePage"));
+const Companies = lazy(() => import("./pages/companies/CompaniesPage"));
+const AddCompany = lazy(() => import("./pages/companies/AddCompanyPage"));
+const Jobs = lazy(() => import("./pages/jobs/JobsPage"));
+const AddJob = lazy(() => import("./pages/jobs/AddJobPage"));
+const Candidates = lazy(() => import("./pages/candidates/CandidatesPage"));
+const AddCandidate = lazy(() => import("./pages/candidates/AddCandidatePage"));
+
+const App = () => {
+   const { darkMode } = useContext(ThemeContext);
+
+   const appStyles = darkMode ? "app dark" : "app";
+
+   return (
+      <div className={appStyles}>
+         <Navbar />
+         <div className="wrapper">
+            <Suspense fallback={<CustomLinearProgress />}>
+               <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/companies">
+                     <Route index element={<Companies />} />
+                     <Route path="add" element={<AddCompany />} />
+                  </Route>
+                  <Route path="/jobs">
+                     <Route index element={<Jobs />} />
+                     <Route path="add" element={<AddJob />} />
+                  </Route>
+                  <Route path="/candidates">
+                     <Route index element={<Candidates />} />
+                     <Route path="add" element={<AddCandidate />} />
+                  </Route>
+               </Routes>
+            </Suspense>
+         </div>
+      </div>
+   );
+};
+
+export default App;
